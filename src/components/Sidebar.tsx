@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import AppLogo from '@/components/ui/AppLogo';
-import { LayoutDashboard, ShoppingCart, Package, Users, BarChart3, Settings, ChevronLeft, ChevronRight, Bell, LogOut, Warehouse, FileText, Truck, ClipboardList, CreditCard, Globe, User, ShoppingBag, ClipboardCheck,  } from 'lucide-react';
+import { LayoutDashboard, ShoppingCart, Package, Users, BarChart3, Settings, ChevronLeft, ChevronRight, Bell, LogOut, Warehouse, FileText, Truck, ClipboardList, CreditCard, Globe, User, ShoppingBag, ClipboardCheck } from 'lucide-react';
 import Icon from '@/components/ui/AppIcon';
 
 
@@ -30,6 +30,7 @@ const navItems: NavItem[] = [
   { id: 'nav-rapports', label: 'Rapports', href: '/rapports', icon: FileText, group: 'Gestion' },
   { id: 'nav-caisses', label: 'Caisses', href: '/caisses', icon: CreditCard, group: 'Gestion' },
   { id: 'nav-catalogue-public', label: 'Catalogue public', href: '/catalogue', icon: Globe, group: 'Système' },
+  { id: 'nav-notifications', label: 'Notifications', href: '/notifications', icon: Bell, badge: 3, group: 'Système' },
   { id: 'nav-parametres', label: 'Paramètres', href: '/parametres', icon: Settings, group: 'Système' },
   { id: 'nav-profil', label: 'Mon profil', href: '/profil', icon: User, group: 'Système' },
 ];

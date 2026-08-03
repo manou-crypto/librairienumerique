@@ -16,7 +16,7 @@ interface Utilisateur {
   dateCreation: string;
 }
 
-const UTILISATEURS: Utilisateur[] = [
+const UTILISATEURS_INIT: Utilisateur[] = [
   { id: 1, nom: 'Ahmed Mansouri', email: 'admin@librairie.dz', role: 'super_admin', statut: 'actif', derniereConnexion: '2026-08-03 14:30', dateCreation: '2025-01-15' },
   { id: 2, nom: 'Sara Benali', email: 'manager@librairie.dz', role: 'manager', statut: 'actif', derniereConnexion: '2026-08-03 09:15', dateCreation: '2025-03-20' },
   { id: 3, nom: 'Karim Hadj', email: 'caissier@librairie.dz', role: 'cashier', statut: 'actif', derniereConnexion: '2026-08-03 08:00', dateCreation: '2025-06-01' },
@@ -30,7 +30,7 @@ const ROLE_CONFIG: Record<Role, { label: string; className: string }> = {
   cashier: { label: 'Caissier', className: 'badge-alert' },
 };
 
-interface NewUserForm {
+interface UserForm {
   nom: string;
   email: string;
   role: Role;
@@ -38,12 +38,42 @@ interface NewUserForm {
 }
 
 export default function UtilisateursPage() {
+  const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>(UTILISATEURS_INIT);
   const [search, setSearch] = useState('');
   const [filterRole, setFilterRole] = useState('all');
-  const [showModal, setShowModal] = useState(false);
-  const [form, setForm] = useState<NewUserForm>({ nom: '', email: '', role: 'cashier', password: '' });
 
-  const filtered = UTILISATEURS.filter((u) => {
+  // Add modal
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [addForm, setAddForm] = useState<UserForm>({ nom: '', email: '', role: 'cashier', password: '' });
+
+  // Edit modal
+  const [editUser, setEditUser] = useState<Utilisateur | null>(null);
+  const [editForm, setEditForm] = useState<UserForm>({ nom: '', email: '', role: 'cashier', password: '' });
+
+  const openEdit = (user: Utilisateur) => {
+    setEditUser(user);
+    setEditForm({ nom: user.nom, email: user.email, role: user.role, password: '' });
+  };
+
+  const saveEdit = () => {
+    if (!editUser) return;
+    setUtilisateurs(prev =>
+      prev.map(u =>
+        u.id === editUser.id
+          ? { ...u, nom: editForm.nom, email: editForm.email, role: editForm.role }
+          : u
+      )
+    );
+    setEditUser(null);
+  };
+
+  const toggleStatut = (id: number) => {
+    setUtilisateurs(prev =>
+      prev.map(u => u.id === id ? { ...u, statut: u.statut === 'actif' ? 'inactif' : 'actif' } : u)
+    );
+  };
+
+  const filtered = utilisateurs.filter((u) => {
     const matchSearch = u.nom.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase());
     const matchRole = filterRole === 'all' || u.role === filterRole;
     return matchSearch && matchRole;
@@ -57,19 +87,19 @@ export default function UtilisateursPage() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="kpi-card-info">
             <p className="text-xs text-muted-foreground mb-1">Total utilisateurs</p>
-            <p className="text-xl font-bold text-foreground tabular-nums">{UTILISATEURS.length}</p>
+            <p className="text-xl font-bold text-foreground tabular-nums">{utilisateurs.length}</p>
           </div>
           <div className="kpi-card-positive">
             <p className="text-xs text-muted-foreground mb-1">Comptes actifs</p>
-            <p className="text-xl font-bold text-positive tabular-nums">{UTILISATEURS.filter(u => u.statut === 'actif').length}</p>
+            <p className="text-xl font-bold text-positive tabular-nums">{utilisateurs.filter(u => u.statut === 'actif').length}</p>
           </div>
           <div className="kpi-card-neutral">
             <p className="text-xs text-muted-foreground mb-1">Gestionnaires</p>
-            <p className="text-xl font-bold text-foreground tabular-nums">{UTILISATEURS.filter(u => u.role === 'manager').length}</p>
+            <p className="text-xl font-bold text-foreground tabular-nums">{utilisateurs.filter(u => u.role === 'manager').length}</p>
           </div>
           <div className="kpi-card-warning">
             <p className="text-xs text-muted-foreground mb-1">Caissiers</p>
-            <p className="text-xl font-bold text-warning tabular-nums">{UTILISATEURS.filter(u => u.role === 'cashier').length}</p>
+            <p className="text-xl font-bold text-warning tabular-nums">{utilisateurs.filter(u => u.role === 'cashier').length}</p>
           </div>
         </div>
 
@@ -97,7 +127,7 @@ export default function UtilisateursPage() {
                 <option value="manager">Gestionnaire</option>
                 <option value="cashier">Caissier</option>
               </select>
-              <button onClick={() => setShowModal(true)} className="btn-primary flex items-center gap-1.5 text-sm py-2">
+              <button onClick={() => setShowAddModal(true)} className="btn-primary flex items-center gap-1.5 text-sm py-2">
                 <Plus size={14} /> Nouvel utilisateur
               </button>
             </div>
@@ -143,10 +173,18 @@ export default function UtilisateursPage() {
                     </td>
                     <td className="px-5 py-3 text-center">
                       <div className="flex items-center justify-center gap-2">
-                        <button className="p-1.5 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors" title="Modifier">
+                        <button
+                          onClick={() => openEdit(user)}
+                          className="p-1.5 rounded hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+                          title="Modifier"
+                        >
                           <Edit2 size={13} />
                         </button>
-                        <button className={`p-1.5 rounded hover:bg-muted transition-colors ${user.statut === 'actif' ? 'text-negative hover:text-negative' : 'text-positive hover:text-positive'}`} title={user.statut === 'actif' ? 'Désactiver' : 'Activer'}>
+                        <button
+                          onClick={() => toggleStatut(user.id)}
+                          className={`p-1.5 rounded hover:bg-muted transition-colors ${user.statut === 'actif' ? 'text-negative hover:text-negative' : 'text-positive hover:text-positive'}`}
+                          title={user.statut === 'actif' ? 'Désactiver' : 'Activer'}
+                        >
                           {user.statut === 'actif' ? <UserX size={13} /> : <UserCheck size={13} />}
                         </button>
                       </div>
@@ -167,12 +205,12 @@ export default function UtilisateursPage() {
       </div>
 
       {/* Add user modal */}
-      {showModal && (
+      {showAddModal && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-card rounded-xl shadow-2xl w-full max-w-md fade-in">
             <div className="flex items-center justify-between px-6 py-4 border-b border-border">
               <h3 className="text-base font-bold text-foreground">Nouvel utilisateur</h3>
-              <button onClick={() => setShowModal(false)} className="text-muted-foreground hover:text-foreground">
+              <button onClick={() => setShowAddModal(false)} className="text-muted-foreground hover:text-foreground">
                 <X size={18} />
               </button>
             </div>
@@ -181,8 +219,8 @@ export default function UtilisateursPage() {
                 <label className="block text-xs font-semibold text-foreground mb-1.5">Nom complet</label>
                 <input
                   type="text"
-                  value={form.nom}
-                  onChange={(e) => setForm({ ...form, nom: e.target.value })}
+                  value={addForm.nom}
+                  onChange={(e) => setAddForm({ ...addForm, nom: e.target.value })}
                   placeholder="Prénom Nom"
                   className="input-field text-sm"
                 />
@@ -191,8 +229,8 @@ export default function UtilisateursPage() {
                 <label className="block text-xs font-semibold text-foreground mb-1.5">Email</label>
                 <input
                   type="email"
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  value={addForm.email}
+                  onChange={(e) => setAddForm({ ...addForm, email: e.target.value })}
                   placeholder="utilisateur@librairie.dz"
                   className="input-field text-sm"
                 />
@@ -200,8 +238,8 @@ export default function UtilisateursPage() {
               <div>
                 <label className="block text-xs font-semibold text-foreground mb-1.5">Rôle</label>
                 <select
-                  value={form.role}
-                  onChange={(e) => setForm({ ...form, role: e.target.value as Role })}
+                  value={addForm.role}
+                  onChange={(e) => setAddForm({ ...addForm, role: e.target.value as Role })}
                   className="input-field text-sm"
                 >
                   <option value="super_admin">Super Admin</option>
@@ -213,8 +251,8 @@ export default function UtilisateursPage() {
                 <label className="block text-xs font-semibold text-foreground mb-1.5">Mot de passe temporaire</label>
                 <input
                   type="password"
-                  value={form.password}
-                  onChange={(e) => setForm({ ...form, password: e.target.value })}
+                  value={addForm.password}
+                  onChange={(e) => setAddForm({ ...addForm, password: e.target.value })}
                   placeholder="••••••••"
                   className="input-field text-sm"
                 />
@@ -229,8 +267,70 @@ export default function UtilisateursPage() {
               </div>
             </div>
             <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-border">
-              <button onClick={() => setShowModal(false)} className="btn-secondary text-sm py-2">Annuler</button>
-              <button onClick={() => setShowModal(false)} className="btn-primary text-sm py-2">Créer le compte</button>
+              <button onClick={() => setShowAddModal(false)} className="btn-secondary text-sm py-2">Annuler</button>
+              <button onClick={() => setShowAddModal(false)} className="btn-primary text-sm py-2">Créer le compte</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit user modal */}
+      {editUser && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-card rounded-xl shadow-2xl w-full max-w-md fade-in">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+              <h3 className="text-base font-bold text-foreground">Modifier l'utilisateur</h3>
+              <button onClick={() => setEditUser(null)} className="text-muted-foreground hover:text-foreground">
+                <X size={18} />
+              </button>
+            </div>
+            <div className="px-6 py-5 space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-foreground mb-1.5">Nom complet</label>
+                <input
+                  type="text"
+                  value={editForm.nom}
+                  onChange={(e) => setEditForm({ ...editForm, nom: e.target.value })}
+                  placeholder="Prénom Nom"
+                  className="input-field text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-foreground mb-1.5">Email</label>
+                <input
+                  type="email"
+                  value={editForm.email}
+                  onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                  placeholder="utilisateur@librairie.dz"
+                  className="input-field text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-foreground mb-1.5">Rôle</label>
+                <select
+                  value={editForm.role}
+                  onChange={(e) => setEditForm({ ...editForm, role: e.target.value as Role })}
+                  className="input-field text-sm"
+                >
+                  <option value="super_admin">Super Admin</option>
+                  <option value="manager">Gestionnaire</option>
+                  <option value="cashier">Caissier</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-foreground mb-1.5">Nouveau mot de passe <span className="text-muted-foreground font-normal">(laisser vide pour ne pas changer)</span></label>
+                <input
+                  type="password"
+                  value={editForm.password}
+                  onChange={(e) => setEditForm({ ...editForm, password: e.target.value })}
+                  placeholder="••••••••"
+                  className="input-field text-sm"
+                />
+              </div>
+            </div>
+            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-border">
+              <button onClick={() => setEditUser(null)} className="btn-secondary text-sm py-2">Annuler</button>
+              <button onClick={saveEdit} className="btn-primary text-sm py-2">Enregistrer</button>
             </div>
           </div>
         </div>
