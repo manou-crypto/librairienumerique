@@ -1,14 +1,15 @@
-'use client';
 import React, { useState } from 'react';
+// Moved to src/app/(erp)/profil/page.tsx
+import { User, Lock, Bell, Camera, Shield, CheckCircle, Save } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
 import Topbar from '@/components/Topbar';
-import { User, Lock, Bell, Save, CheckCircle, Camera, Shield } from 'lucide-react';
-import Icon from '@/components/ui/AppIcon';
+
+
 
 
 type ProfileTab = 'infos' | 'securite' | 'preferences';
 
-export default function ProfilPage() {
+export function ProfilPage() {
   const [activeTab, setActiveTab] = useState<ProfileTab>('infos');
   const [saved, setSaved] = useState(false);
 
@@ -265,3 +266,5 @@ export default function ProfilPage() {
     </AppLayout>
   );
 }
+
+export {};

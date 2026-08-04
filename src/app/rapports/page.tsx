@@ -43,7 +43,7 @@ const ventesJour = [
 
 type Period = 'semaine' | 'mois' | 'trimestre' | 'annee';
 
-export default function RapportsPage() {
+function RapportsPage() {
   const [period, setPeriod] = useState<Period>('mois');
 
   const periodLabels: Record<Period, string> = {
@@ -230,3 +230,5 @@ export default function RapportsPage() {
     </AppLayout>
   );
 }
+
+// This file has been moved to src/app/(erp)/rapports/page.tsx

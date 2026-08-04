@@ -5,6 +5,8 @@ const nextConfig = {
   productionBrowserSourceMaps: true,
   distDir: process.env.DIST_DIR || '.next',
 
+  pageExtensions: ['page.tsx', 'page.ts', 'page.jsx', 'page.js'],
+
   typescript: {
     ignoreBuildErrors: true,
   },

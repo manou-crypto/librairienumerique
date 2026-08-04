@@ -31,7 +31,7 @@ const CLOTURES = [
   { date: '2026-07-30', caisse1: 39800, caisse2: 28600, total: 68400, statut: 'cloture' },
 ];
 
-export default function FinancesPage() {
+function FinancesPage() {
   const [period, setPeriod] = useState<'jour' | 'mois' | 'annee'>('mois');
 
   const totalCA = CA_DATA.reduce((s, d) => s + d.ca, 0);
@@ -192,3 +192,5 @@ export default function FinancesPage() {
     </AppLayout>
   );
 }
+
+// This file has been moved to src/app/(erp)/finances/page.tsx

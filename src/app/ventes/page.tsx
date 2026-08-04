@@ -1,8 +1,11 @@
-'use client';
 import React, { useState } from 'react';
 import AppLayout from '@/components/AppLayout';
 import Topbar from '@/components/Topbar';
-import { Search, Eye, Download, ShoppingBag } from 'lucide-react';
+import { Search, Download, Eye, ShoppingBag } from 'lucide-react';
+
+
+// Moved to src/app/(erp)/ventes/page.tsx
+export {};
 
 interface Vente {
   id: number;
@@ -33,7 +36,7 @@ const MODE_CONFIG = {
   cheque: { label: 'Chèque', className: 'badge-alert' },
 };
 
-export default function VentesPage() {
+function VentesPage() {
   const [search, setSearch] = useState('');
   const [filterDate, setFilterDate] = useState('');
   const [filterMode, setFilterMode] = useState('all');
@@ -173,3 +176,5 @@ export default function VentesPage() {
     </AppLayout>
   );
 }
+
+export {};

@@ -1,14 +1,15 @@
-'use client';
 import React, { useState } from 'react';
+// Moved to src/app/(erp)/parametres/page.tsx
+import { Store, Bell, Shield, Database, Globe, CheckCircle, Download, Upload, Save } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
 import Topbar from '@/components/Topbar';
-import { Save, Store, Globe, Bell, Shield, Database, Upload, CheckCircle, Download } from 'lucide-react';
-import Icon from '@/components/ui/AppIcon';
+
+
 
 
 type SettingsTab = 'general' | 'notifications' | 'securite' | 'sauvegarde';
 
-export default function ParametresPage() {
+export function ParametresPage() {
   const [activeTab, setActiveTab] = useState<SettingsTab>('general');
   const [saved, setSaved] = useState(false);
 
@@ -252,3 +253,5 @@ export default function ParametresPage() {
     </AppLayout>
   );
 }
+
+export {};
