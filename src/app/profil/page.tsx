@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { User, Lock, Bell, Camera, Shield, CheckCircle, Save } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
 import Topbar from '@/components/Topbar';
+import Icon from '@/components/ui/AppIcon';
+
 
 
 
