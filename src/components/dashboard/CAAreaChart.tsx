@@ -10,7 +10,7 @@ const data =[
   { jour: 'Ven 1', semaine: 5100, precedente: 4200 },
   { jour: 'Sam 2', semaine: 4680, precedente: 5300 },
   { jour: 'Dim 3', semaine: 3848, precedente: 3600 },
-] ;
+];
 
 interface CustomTooltipProps {
   active?: boolean;
