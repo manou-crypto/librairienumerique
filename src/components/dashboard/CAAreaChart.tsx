@@ -2,7 +2,15 @@
 import React from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-const data = ;
+const data =[
+  { jour: 'Lun 28', semaine: 2840, precedente: 3100 },
+  { jour: 'Mar 29', semaine: 3620, precedente: 2950 },
+  { jour: 'Mer 30', semaine: 3180, precedente: 3400 },
+  { jour: 'Jeu 31', semaine: 4250, precedente: 3800 },
+  { jour: 'Ven 1', semaine: 5100, precedente: 4200 },
+  { jour: 'Sam 2', semaine: 4680, precedente: 5300 },
+  { jour: 'Dim 3', semaine: 3848, precedente: 3600 },
+] ;
 
 interface CustomTooltipProps {
   active?: boolean;
