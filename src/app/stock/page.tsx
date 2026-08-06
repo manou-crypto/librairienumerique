@@ -1,8 +1,11 @@
-'use client';
 import React, { useState } from 'react';
 import AppLayout from '@/components/AppLayout';
 import Topbar from '@/components/Topbar';
-import { Search, AlertTriangle, TrendingDown, Package, Download } from 'lucide-react';
+import { TrendingDown, AlertTriangle, Package, Search, Download } from 'lucide-react';
+
+
+// Moved to src/app/(erp)/stock/page.tsx
+export {};
 
 interface StockItem {
   id: number;
@@ -39,7 +42,7 @@ const STATUT_CONFIG = {
   surstock: { label: 'Surstock', className: 'badge-draft' },
 };
 
-export default function StockPage() {
+function StockPage() {
   const [search, setSearch] = useState('');
   const [filterStatut, setFilterStatut] = useState('all');
 
@@ -179,3 +182,5 @@ export default function StockPage() {
     </AppLayout>
   );
 }
+
+export {};

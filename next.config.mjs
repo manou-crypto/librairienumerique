@@ -4,6 +4,7 @@ import { imageHosts } from './image-hosts.config.mjs';
 const nextConfig = {
   productionBrowserSourceMaps: true,
   distDir: process.env.DIST_DIR || '.next',
+  pageExtensions: ['page.tsx', 'page.ts', 'page.jsx', 'page.js'],
 
   typescript: {
     ignoreBuildErrors: true,
@@ -21,23 +22,14 @@ const nextConfig = {
 
   webpack(config, { dev }) {
 if (dev) {
-  config.module.rules.push({
-    test: /\.(jsx|tsx)$/,
-    exclude: [/node_modules/],
-    use: [{
-      loader: '@dhiwise/component-tagger/nextLoader',
-    }],
-  });
-  const ignoredPaths = (process.env.WATCH_IGNORED_PATHS || '')
-    .split(',')
-    .map((p) => p.trim())
-    .filter(Boolean);
-  config.watchOptions = {
-    ignored: ignoredPaths.length
-      ? ignoredPaths.map((p) => `**/${p.replace(/^\/+|\/+$/g, '')}/**`)
-      : undefined,
-  };
-}
+    config.module.rules.push({
+      test: /\.(jsx|tsx)$/,
+      exclude: [/node_modules/],
+      use: [{
+        loader: '@dhiwise/component-tagger/nextLoader',
+      }],
+    });
+  }
 
     return config;
   }

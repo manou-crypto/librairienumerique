@@ -1,8 +1,10 @@
-'use client';
 import React, { useState, useMemo } from 'react';
-import Link from 'next/link';
-import { Search, SlidersHorizontal, Grid3X3, List, X, BookOpen, Laptop, Pencil, Package } from 'lucide-react';
 import Icon from '@/components/ui/AppIcon';
+import { Package, BookOpen, Laptop, Pencil, Search, X, SlidersHorizontal, Grid3X3, List } from 'lucide-react';
+import Link from 'next/link';
+
+// Moved to src/app/(public)/catalogue/page.tsx
+export {};
 
 
 const CATEGORIES = [
@@ -334,6 +336,8 @@ export default function CataloguePage() {
           <Link href="/login" className="text-primary hover:underline">Espace administration →</Link>
         </div>
       </footer>
-    </div>);
-
+    </div>
+  );
 }
+
+export {};

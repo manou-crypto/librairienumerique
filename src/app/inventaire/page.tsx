@@ -48,7 +48,7 @@ const STATUT_SESSION = {
   valide: { label: 'Validé', className: 'badge-active', icon: CheckCircle },
 };
 
-export default function InventairePage() {
+function InventairePage() {
   const [activeTab, setActiveTab] = useState<'sessions' | 'saisie'>('sessions');
   const [search, setSearch] = useState('');
   const [lignes, setLignes] = useState(LIGNES);
@@ -248,3 +248,5 @@ export default function InventairePage() {
     </AppLayout>
   );
 }
+
+export default InventairePage;
